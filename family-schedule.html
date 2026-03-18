@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>パパどこ？</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+      background: #f0eef8;
+      color: #2e2040;
+      height: 100dvh;
+      padding: 10px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .page-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: #a090c0;
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .card {
+      flex: 1;
+      min-height: 0;
+      border-radius: 20px;
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.09);
+      position: relative;
+      background: #fff;
+    }
+    .card.c-home     { background: #eaf8f2; }
+    .card.c-away     { background: #fdeaed; }
+    .card.c-partaway { background: #fff4e6; }
+    .card.past       { opacity: 0.25; }
+    @keyframes today-glow {
+      0%,100% { box-shadow: 0 6px 22px rgba(60,160,255,0.45), 0 0 0 0 rgba(60,160,255,0.2); }
+      50%      { box-shadow: 0 6px 22px rgba(60,160,255,0.45), 0 0 0 8px rgba(60,160,255,0); }
+    }
+    .card.today {
+      border: 3px solid #3c9ef5;
+      animation: today-glow 2.2s ease-in-out infinite;
+      transform: scale(1.012);
+      z-index: 1;
+    }
+    .card-date {
+      width: 72px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      padding: 10px 6px;
+    }
+    .card.c-home     .card-date { background: #c4f0dc; }
+    .card.c-away     .card-date { background: #f9c8d2; }
+    .card.c-partaway .card-date { background: #ffd9a8; }
+    .card-dow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em; }
+    .card.weekday .card-dow { color: #5a4a80; }
+    .card.sat     .card-dow { color: #1a7acc; }
+    .card.sun     .card-dow, .card.holiday .card-dow { color: #c02828; }
+    .card-day { font-size: 2.5rem; font-weight: 900; line-height: 1.0; }
+    .card.weekday .card-day { color: #2e2040; }
+    .card.sat     .card-day { color: #1a7acc; }
+    .card.sun     .card-day, .card.holiday .card-day { color: #c02828; }
+    .card.today   .card-day { color: #1a7acc !important; }
+    @keyframes dot-blink {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.3; transform: scale(0.6); }
+    }
+    .today-dot {
+      width: 8px; height: 8px;
+      background: #3c9ef5;
+      border-radius: 50%;
+      box-shadow: 0 0 5px 2px rgba(60,158,245,0.5);
+      animation: dot-blink 1.5s ease-in-out infinite;
+    }
+    .card-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10px 16px 8px 14px;
+      gap: 4px;
+    }
+    .status-main { font-size: 1.25rem; font-weight: 900; color: #2e2040; line-height: 1.2; }
+    .time-sub { font-size: 0.9rem; font-weight: 600; color: #8070a8; letter-spacing: 0.01em; margin-top: 2px; }
+    .home-row { display: flex; align-items: center; gap: 8px; }
+    .home-icon  { font-size: 1.7rem; line-height: 1; }
+    .home-label { font-size: 1.25rem; font-weight: 900; color: #2e2040; }
+    .area-tag {
+      display: inline-block;
+      font-size: 0.68rem; font-weight: 700; color: #5538a8;
+      background: rgba(100,80,200,0.1);
+      border: 1.5px solid rgba(100,80,200,0.25);
+      border-radius: 20px;
+      padding: 1px 8px;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+    .card-fact { font-size: 0.6rem; color: #9080b0; line-height: 1.3; text-align: left; }
+  </style>
+</head>
+<body>
+<div class="page-title">📅 けんの予定</div>
+<div id="cards"></div>
+<script>
+const WEEK = [
+  {
+    date:"2026-03-09", dow:"月", d:"9",
+    type:"partaway",
+    holiday:false,
+    leave:"21:00",
+    back:"22:00",
+    area:"八王子",
+    fact:"1945年3月9日、東京大空襲が行われ一夜で約10万人が犠牲となった。",
+    silly:"タコは3つの心臓を持ち、血液に銅が含まれるため青い色をしている。"
+  },
+  {
+    date:"2026-03-10", dow:"火", d:"10",
+    type:"away",
+    holiday:false,
+    leave:"10:00",
+    back:"21:00",
+    area:"都内",
+    fact:"1876年3月10日、グラハム・ベルが世界初の電話通話に成功した。",
+    silly:"カバの汗は赤く見えるが、実際には日焼け止めと抗菌剤の役割を持つ特殊な分泌物で汗ではない。"
+  },
+  {
+    date:"2026-03-11", dow:"水", d:"11",
+    type:"partaway",
+    holiday:false,
+    leave:"20:00",
+    back:"20:30",
+    area:"八王子",
+    fact:"2011年3月11日、東日本大震災が発生しM9.0の地震と巨大津波が日本を襲った。",
+    silly:"カタツムリは舌の上に1万本以上の小さな歯を持ち、動物の中でも最多クラスの歯の数を誇る。"
+  },
+  {
+    date:"2026-03-12", dow:"木", d:"12",
+    type:"home",
+    holiday:false,
+    fact:"1912年3月12日、ガールスカウト運動の創始者ジュリエット・ロウが米国で最初の集会を開いた。",
+    silly:"フラミンゴがピンク色なのは自分で色素を作れないためで、食べるエビや藻のカロテノイドが体の色を決めている。"
+  },
+  {
+    date:"2026-03-13", dow:"金", d:"13",
+    type:"away",
+    holiday:false,
+    leave:"08:00",
+    back:"18:00",
+    area:"オフィス",
+    fact:"1781年3月13日、天文学者ハーシェルが天王星を発見し望遠鏡で見つかった初の惑星となった。",
+    silly:"チーターが全速力で走ると足が地面に触れている時間は全体の50%以下で、ほとんど飛んでいる状態になる。"
+  },
+  {
+    date:"2026-03-14", dow:"土", d:"14",
+    type:"home",
+    holiday:false,
+    fact:"1879年3月14日、アルベルト・アインシュタインがドイツのウルムで誕生した（円周率の日でもある）。",
+    silly:"シャコは人間が見えない16種類の色を感知できる視覚細胞を持ち、同時にパンチの速さも拳銃の弾に匹敵する。"
+  },
+  {
+    date:"2026-03-15", dow:"日", d:"15",
+    type:"home",
+    holiday:false,
+    fact:"紀元前44年3月15日、ローマの独裁官カエサルが元老院議員たちに暗殺された「イドゥスのマルティウス」。",
+    silly:"コアラの指紋は人間のものとほぼ区別がつかないほど似ており、犯罪捜査の現場で混同されたことがあるとされる。"
+  }
+];
+
+const pad = n => String(n).padStart(2,"0");
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function renderCards() {
+  const today = todayStr();
+  const wrap  = document.getElementById("cards");
+  wrap.style.cssText = "flex:1;min-height:0;display:flex;flex-direction:column;gap:7px;";
+  wrap.innerHTML = "";
+  WEEK.forEach((e, idx) => {
+    const isToday   = e.date === today;
+    const isPast    = e.date < today;
+    const isSat     = e.dow === "土";
+    const isSun     = e.dow === "日";
+    const isHoliday = e.holiday;
+    const isWeekend = isSat || isSun || isHoliday;
+    const typeClass = { home:"c-home", away:"c-away", partaway:"c-partaway" }[e.type];
+    const dowClass  = isHoliday ? "holiday" : isSat ? "sat" : isSun ? "sun" : "weekday";
+    const holLabel  = isHoliday ? "🎌" : "";
+    const areaTag   = e.area ? `<span class="area-tag">@${e.area}</span>` : "";
+    let mainHTML = "";
+    if (e.type === "home") {
+      const label = isWeekend ? "おやすみ！おうちにいます" : "おうちにいます";
+      mainHTML = `<div class="home-row"><span class="home-icon">🏠</span><span class="home-label">${label}</span></div>`;
+    } else if (e.type === "away") {
+      mainHTML = `<div class="status-main">でかけます ${areaTag}</div><div class="time-sub">🚪 ${e.leave} &nbsp;→&nbsp; 🏠 ${e.back}ごろ</div>`;
+    } else {
+      mainHTML = `<div class="status-main">夜からでかけます ${areaTag}</div><div class="time-sub">🚪 ${e.leave} &nbsp;→&nbsp; 🏠 ${e.back}ごろ</div>`;
+    }
+    const todayDotHTML = isToday ? `<div class="today-dot"></div>` : "";
+    const factHTML = idx % 2 === 0 ? "📖 " + e.fact : "💬 " + e.silly;
+    wrap.innerHTML += `
+      <div class="card ${typeClass} ${dowClass}${isToday?" today":""}${isPast?" past":""}">
+        <div class="card-date">
+          <div class="card-dow">${e.dow}曜${holLabel}</div>
+          <div class="card-day">${e.d}</div>
+          ${todayDotHTML}
+        </div>
+        <div class="card-body">
+          ${mainHTML}
+          <div class="card-fact">${factHTML}</div>
+        </div>
+      </div>`;
+  });
+}
+renderCards();
+setInterval(renderCards, 30 * 60 * 1000);
+</script>
+</body>
+</html>

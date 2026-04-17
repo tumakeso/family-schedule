@@ -258,12 +258,24 @@ function todayStr() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
+function getWeekData() {
+  const today = todayStr();
+  const lastDayOfWeek = WEEK[WEEK.length - 1].date;
+  if (today > lastDayOfWeek) {
+    return { thisWeek: NEXT_WEEK, nextWeek: [] };
+  }
+  return { thisWeek: WEEK, nextWeek: NEXT_WEEK };
+}
 function renderCards() {
   const today = todayStr();
   const wrap  = document.getElementById("cards");
   wrap.style.cssText = "flex:1;min-height:0;display:flex;flex-direction:column;gap:7px;";
   wrap.innerHTML = "";
-  const activeWeek = (viewMode === 'next' && NEXT_WEEK.length > 0) ? NEXT_WEEK : WEEK;
+  const { thisWeek, nextWeek } = getWeekData();
+  const btnNext = document.getElementById('btn-next');
+  btnNext.style.display = nextWeek.length > 0 ? '' : 'none';
+  if (nextWeek.length === 0 && viewMode === 'next') viewMode = 'this';
+  const activeWeek = (viewMode === 'next' && nextWeek.length > 0) ? nextWeek : thisWeek;
   activeWeek.forEach((e, idx) => {
     const isToday   = e.date === today;
     const isPast    = e.date < today;

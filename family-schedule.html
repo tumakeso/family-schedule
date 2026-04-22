@@ -1,4 +1,4 @@
-<!DOCTYPE html><!-- updated:2026-04-08 -->
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -107,7 +107,6 @@
       vertical-align: middle;
       margin-left: 4px;
     }
-    .card-fact { font-size: 0.6rem; color: #9080b0; line-height: 1.3; text-align: left; }
     .week-toggle {
       display: flex;
       justify-content: center;
@@ -131,6 +130,25 @@
       color: #fff;
       border-color: #c0b0e0;
     }
+    #loading {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a090c0;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    #error-msg {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c04040;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
@@ -139,167 +157,77 @@
   <button class="week-btn active" id="btn-this" onclick="switchWeek('this')">今週</button>
   <button class="week-btn" id="btn-next" onclick="switchWeek('next')">来週</button>
 </div>
-<div id="cards"></div>
+<div id="loading">よみこみちゅう…</div>
+<div id="cards" style="display:none"></div>
+<div id="error-msg" style="display:none"></div>
+
 <script>
-const WEEK = [
-  {
-    date:"2026-04-06", dow:"月", d:"6",
-    type:"partaway", leave:"13:00", back:"21:00",
-    holiday:false,
-    fact:"1896年4月6日、アテネで第1回近代オリンピックが開幕。14カ国241選手が参加した、現代スポーツの祭典の始まりだ🏟️",
-    silly:"ミツバチが一生かけて集めるハチミツはティースプーン1杯分。朝ごはんに塗る分のために一生を捧げている🍯"
-  },
-  {
-    date:"2026-04-07", dow:"火", d:"7",
-    type:"home",
-    holiday:false,
-    fact:"1795年4月7日、フランスがメートル法を正式採用した。長さや重さを世界共通の単位で測れるようになった歴史的な日📏",
-    silly:"カバは汗の代わりに赤い液体を分泌する。日焼け止めと抗菌剤を兼ねた天然のスキンケア液だ🦛"
-  },
-  {
-    date:"2026-04-08", dow:"水", d:"8",
-    type:"home",
-    holiday:false,
-    fact:"1820年4月8日、ギリシャの農民がミロのヴィーナス像を畑で発見。発見時には両腕があったという説もある🏛️",
-    silly:"ネコが箱に入りたがるのは囲まれた空間が安心できるから。野生の本能が今もダンボールの中で生きている📦"
-  },
-  {
-    date:"2026-04-09", dow:"木", d:"9",
-    type:"away", leave:"07:30", back:"21:00",
-    holiday:false,
-    fact:"1865年4月9日、南北戦争でリー将軍が降伏。4年間続いたアメリカを二分した内戦がついに終わりを迎えた⚔️",
-    silly:"クモは筋肉でなく血圧を使って足を動かす。油圧式ロボットのような仕組みで8本の足を器用に操る🕷️"
-  },
-  {
-    date:"2026-04-10", dow:"金", d:"10",
-    type:"away", leave:"07:30", back:"21:15",
-    holiday:false,
-    fact:"1912年4月10日、タイタニック号がサウサンプトン港を出港した。4日後に沈没するとは誰も思っていなかった🚢",
-    silly:"ラッコは眠るとき昆布に体を巻きつけて流されないようにする。自然のアンカーを使った賢い寝方だ🦦"
-  },
-  {
-    date:"2026-04-11", dow:"土", d:"11",
-    type:"home",
-    holiday:false,
-    fact:"1970年4月11日、アポロ13号が打ち上げられた。2日後に酸素タンクが爆発し乗組員3名が奇跡の生還を遂げた🚀",
-    silly:"シロクマの毛は透明で中が空洞だ。光が乱反射して白く見えるだけで皮膚は真っ黒という不思議な生き物🐻‍❄️"
-  },
-  {
-    date:"2026-04-12", dow:"日", d:"12",
-    type:"home",
-    holiday:false,
-    fact:"1961年4月12日、ソ連のガガーリン飛行士が人類初の宇宙飛行を達成。「地球は青かった」という言葉が残る🌍",
-    silly:"イルカは眠るとき脳の半分だけを休め、残り半分で泳ぎ続ける。片目を開けたまま眠るマルチタスクの達人だ🐬"
-  }
-];
+// ▼ GASデプロイ後にURLをここに貼り付けてください
+const GAS_URL = "YOUR_GAS_URL_HERE";
 
-const NEXT_WEEK = [
-  {
-    date:"2026-04-13", dow:"月", d:"13",
-    type:"away", leave:"07:30", back:"21:00",
-    holiday:false,
-    fact:"1743年4月13日、アメリカ独立宣言の起草者トーマス・ジェファーソンが誕生。農場主から大統領になった人だ🇺🇸",
-    silly:"キリンの1日の睡眠時間は約30分ほど。外敵を警戒しながら少しずつ眠る、命がけの短眠生活を送っている🦒"
-  },
-  {
-    date:"2026-04-14", dow:"火", d:"14",
-    type:"away", leave:"07:30", back:"23:00",
-    holiday:false,
-    fact:"1865年4月14日、リンカーン大統領が劇場で銃撃された。翌日亡くなり、奴隷解放の英雄が突然の最期を迎えた🎭",
-    silly:"タコの血は青色だ。銅を含むヘモシアニンが酸素を運ぶため、血の色が青くなる不思議な体の仕組みだ🐙"
-  },
-  {
-    date:"2026-04-15", dow:"水", d:"15",
-    type:"away", leave:"07:30", back:"21:00",
-    holiday:false,
-    fact:"1452年4月15日、レオナルド・ダ・ヴィンチが誕生。画家・科学者・発明家として5百年後も世界に影響を与えている🎨",
-    silly:"アリクイは歯が一本もない。長さ60cmにもなる舌で1日3万5千匹ものアリを食べる食の達人だ🐜"
-  },
-  {
-    date:"2026-04-16", dow:"木", d:"16",
-    type:"away", leave:"09:00", back:"18:00",
-    holiday:false,
-    fact:"1972年4月16日、アポロ16号が月へ向けて打ち上げられた。人類が月面を歩いた6回のミッションのうちの1つだ🌙",
-    silly:"ネコはどんな高さから落ちても必ず足から着地できる。空中で体をひねる「ライティング反射」のおかげだ🐱"
-  },
-  {
-    date:"2026-04-17", dow:"金", d:"17",
-    type:"away", leave:"07:30", back:"18:00",
-    holiday:false,
-    fact:"1961年4月17日、キューバ「ピッグス湾侵攻」が失敗。アメリカ支援の亡命者部隊がカストロ政権に大敗した🌊",
-    silly:"シマウマの縞模様は一頭一頭ぜんぶ違う。人間の指紋と同じように個体識別できるオリジナルのデザインだ🦓"
-  },
-  {
-    date:"2026-04-18", dow:"土", d:"18",
-    type:"home",
-    holiday:false,
-    fact:"1906年4月18日、サンフランシスコ大地震が発生した。M7.9の地震と火災で市の80%が壊滅した歴史的大災害🌎",
-    silly:"カタツムリの目は4つある。大きな触角に眼があり、小さい触角で匂いを感じる。見る目と嗅ぐ鼻が触角に🐌"
-  },
-  {
-    date:"2026-04-19", dow:"日", d:"19",
-    type:"home",
-    holiday:false,
-    fact:"1775年4月19日、レキシントンで最初の銃声が響きアメリカ独立戦争が始まった。大国アメリカ誕生の瞬間だ🔫",
-    silly:"フラミンゴがピンク色なのはエビや藻の色素のせい。白いエサだけ食べると白くなってしまう不思議な鳥だ🦩"
-  }
-];
-
+let scheduleData = null;
 let viewMode = 'this';
+
 function switchWeek(mode) {
   viewMode = mode;
-  document.getElementById('btn-this').className = 'week-btn' + (mode==='this'?' active':'');
-  document.getElementById('btn-next').className = 'week-btn' + (mode==='next'?' active':'');
-  renderCards();
+  document.getElementById('btn-this').className = 'week-btn' + (mode === 'this' ? ' active' : '');
+  document.getElementById('btn-next').className = 'week-btn' + (mode === 'next' ? ' active' : '');
+  if (scheduleData) renderCards(scheduleData);
 }
 
-const pad = n => String(n).padStart(2,"0");
+const pad = n => String(n).padStart(2, "0");
 function todayStr() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 }
-function getWeekData() {
+
+function renderCards(data) {
   const today = todayStr();
-  const lastDayOfWeek = WEEK[WEEK.length - 1].date;
-  if (today > lastDayOfWeek) {
-    return { thisWeek: NEXT_WEEK, nextWeek: [] };
-  }
-  return { thisWeek: WEEK, nextWeek: NEXT_WEEK };
-}
-function renderCards() {
-  const today = todayStr();
-  const wrap  = document.getElementById("cards");
+  const wrap = document.getElementById("cards");
   wrap.style.cssText = "flex:1;min-height:0;display:flex;flex-direction:column;gap:7px;";
   wrap.innerHTML = "";
-  const { thisWeek, nextWeek } = getWeekData();
+
+  const lastDayOfWeek = data.week[data.week.length - 1].date;
+  const isPastWeek = today > lastDayOfWeek;
+  const thisWeek = isPastWeek ? data.nextWeek : data.week;
+  const nextWeek = isPastWeek ? [] : data.nextWeek;
+
   const btnNext = document.getElementById('btn-next');
   btnNext.style.display = nextWeek.length > 0 ? '' : 'none';
   if (nextWeek.length === 0 && viewMode === 'next') viewMode = 'this';
+
   const activeWeek = (viewMode === 'next' && nextWeek.length > 0) ? nextWeek : thisWeek;
-  activeWeek.forEach((e, idx) => {
+
+  activeWeek.forEach(e => {
     const isToday   = e.date === today;
     const isPast    = e.date < today;
     const isSat     = e.dow === "土";
     const isSun     = e.dow === "日";
     const isHoliday = e.holiday;
     const isWeekend = isSat || isSun || isHoliday;
-    const typeClass = { home:"c-home", away:"c-away", partaway:"c-partaway" }[e.type];
+    const typeClass = { home:"c-home", away:"c-away", partaway:"c-partaway" }[e.type] || "c-home";
     const dowClass  = isHoliday ? "holiday" : isSat ? "sat" : isSun ? "sun" : "weekday";
     const holLabel  = isHoliday ? "🎌" : "";
     const areaTag   = e.area ? `<span class="area-tag">@${e.area}</span>` : "";
+
     let mainHTML = "";
     if (e.type === "home") {
       const label = isWeekend ? "おやすみ！おうちにいます" : "おうちにいます";
       mainHTML = `<div class="home-row"><span class="home-icon">🏠</span><span class="home-label">${label}</span></div>`;
     } else if (e.type === "away") {
-      mainHTML = `<div class="status-main">でかけます ${areaTag}</div><div class="time-sub">🚪 ${e.leave} &nbsp;→&nbsp; 🏠 ${e.back}ごろ</div>`;
+      if (e.leave && e.back) {
+        mainHTML = `<div class="status-main">でかけます ${areaTag}</div><div class="time-sub">🚪 ${e.leave} &nbsp;→&nbsp; 🏠 ${e.back}ごろ</div>`;
+      } else {
+        mainHTML = `<div class="status-main">でかけます ${areaTag}</div>`;
+      }
     } else {
       mainHTML = `<div class="status-main">夜からでかけます ${areaTag}</div><div class="time-sub">🚪 ${e.leave} &nbsp;→&nbsp; 🏠 ${e.back}ごろ</div>`;
     }
+
     const todayDotHTML = isToday ? `<div class="today-dot"></div>` : "";
-    const factHTML = idx % 2 === 0 ? "📖 " + e.fact : "💬 " + e.silly;
+
     wrap.innerHTML += `
-      <div class="card ${typeClass} ${dowClass}${isToday?" today":""}${isPast?" past":""}">
+      <div class="card ${typeClass} ${dowClass}${isToday ? " today" : ""}${isPast ? " past" : ""}">
         <div class="card-date">
           <div class="card-dow">${e.dow}曜${holLabel}</div>
           <div class="card-day">${e.d}</div>
@@ -307,13 +235,30 @@ function renderCards() {
         </div>
         <div class="card-body">
           ${mainHTML}
-          <div class="card-fact">${factHTML}</div>
         </div>
       </div>`;
   });
 }
-renderCards();
-setInterval(renderCards, 30 * 60 * 1000);
+
+async function loadSchedule() {
+  try {
+    const res = await fetch(GAS_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    scheduleData = await res.json();
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('cards').style.display = '';
+    renderCards(scheduleData);
+  } catch (err) {
+    document.getElementById('loading').style.display = 'none';
+    const errEl = document.getElementById('error-msg');
+    errEl.style.display = '';
+    errEl.textContent = "よみこみに失敗しました。\nWi-Fiに繋がっているか確認してください。";
+  }
+}
+
+loadSchedule();
+// 30分ごとに自動更新
+setInterval(loadSchedule, 30 * 60 * 1000);
 </script>
 </body>
 </html>

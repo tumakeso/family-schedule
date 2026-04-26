@@ -240,20 +240,28 @@ function renderCards(data) {
   });
 }
 
-async function loadSchedule() {
-  try {
-    const res = await fetch(GAS_URL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    scheduleData = await res.json();
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('cards').style.display = '';
-    renderCards(scheduleData);
-  } catch (err) {
+function loadSchedule() {
+  const callbackName = 'gasCallback_' + Date.now();
+  const script = document.createElement('script');
+  const timer = setTimeout(() => {
+    delete window[callbackName];
+    document.head.removeChild(script);
     document.getElementById('loading').style.display = 'none';
     const errEl = document.getElementById('error-msg');
     errEl.style.display = '';
     errEl.textContent = "よみこみに失敗しました。\nWi-Fiに繋がっているか確認してください。";
-  }
+  }, 10000);
+  window[callbackName] = function(data) {
+    clearTimeout(timer);
+    delete window[callbackName];
+    document.head.removeChild(script);
+    scheduleData = data;
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('cards').style.display = '';
+    renderCards(scheduleData);
+  };
+  script.src = GAS_URL + '?callback=' + callbackName;
+  document.head.appendChild(script);
 }
 
 loadSchedule();

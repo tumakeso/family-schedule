@@ -226,6 +226,7 @@ function renderCards(data) {
     }
 
     const todayDotHTML = isToday ? `<div class="today-dot"></div>` : "";
+    const factHTML = getFact(e.date);
 
     wrap.innerHTML += `
       <div class="card ${typeClass} ${dowClass}${isToday ? " today" : ""}${isPast ? " past" : ""}">
@@ -236,6 +237,7 @@ function renderCards(data) {
         </div>
         <div class="card-body">
           ${mainHTML}
+          <div class="card-fact">${factHTML}</div>
         </div>
       </div>`;
   });

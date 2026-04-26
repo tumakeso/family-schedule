@@ -9,8 +9,8 @@
     html, body { height: 100%; overflow: hidden; }
     body {
       font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
-      background: #f0eef8;
-      color: #2e2040;
+      background: #1a1728;
+      color: #e0d8f8;
       height: 100dvh;
       padding: 10px 12px 12px;
       display: flex;
@@ -21,7 +21,7 @@
       font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.14em;
-      color: #a090c0;
+      color: #7060a8;
       text-align: center;
       flex-shrink: 0;
     }
@@ -32,20 +32,19 @@
       display: flex;
       align-items: stretch;
       overflow: hidden;
-      box-shadow: 0 3px 14px rgba(0,0,0,0.09);
+      box-shadow: 0 3px 16px rgba(0,0,0,0.35);
       position: relative;
-      background: #fff;
     }
-    .card.c-home     { background: #eaf8f2; }
-    .card.c-away     { background: #fdeaed; }
-    .card.c-partaway { background: #fff4e6; }
-    .card.past       { opacity: 0.25; }
+    .card.c-home     { background: #1a2a26; }
+    .card.c-away     { background: #2a1a20; }
+    .card.c-partaway { background: #2a2016; }
+    .card.past       { opacity: 0.22; }
     @keyframes today-glow {
-      0%,100% { box-shadow: 0 6px 22px rgba(60,160,255,0.45), 0 0 0 0 rgba(60,160,255,0.2); }
-      50%      { box-shadow: 0 6px 22px rgba(60,160,255,0.45), 0 0 0 8px rgba(60,160,255,0); }
+      0%,100% { box-shadow: 0 6px 24px rgba(80,160,255,0.4), 0 0 0 0 rgba(80,160,255,0.15); }
+      50%      { box-shadow: 0 6px 24px rgba(80,160,255,0.4), 0 0 0 8px rgba(80,160,255,0); }
     }
     .card.today {
-      border: 3px solid #3c9ef5;
+      border: 2px solid #4a9ef5;
       animation: today-glow 2.2s ease-in-out infinite;
       transform: scale(1.012);
       z-index: 1;
@@ -60,27 +59,27 @@
       gap: 2px;
       padding: 10px 6px;
     }
-    .card.c-home     .card-date { background: #c4f0dc; }
-    .card.c-away     .card-date { background: #f9c8d2; }
-    .card.c-partaway .card-date { background: #ffd9a8; }
+    .card.c-home     .card-date { background: #203830; }
+    .card.c-away     .card-date { background: #3a2028; }
+    .card.c-partaway .card-date { background: #382a18; }
     .card-dow { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em; }
-    .card.weekday .card-dow { color: #5a4a80; }
-    .card.sat     .card-dow { color: #1a7acc; }
-    .card.sun     .card-dow, .card.holiday .card-dow { color: #c02828; }
+    .card.weekday .card-dow { color: #9080c8; }
+    .card.sat     .card-dow { color: #60a8e0; }
+    .card.sun     .card-dow, .card.holiday .card-dow { color: #e06070; }
     .card-day { font-size: 2.5rem; font-weight: 900; line-height: 1.0; }
-    .card.weekday .card-day { color: #2e2040; }
-    .card.sat     .card-day { color: #1a7acc; }
-    .card.sun     .card-day, .card.holiday .card-day { color: #c02828; }
-    .card.today   .card-day { color: #1a7acc !important; }
+    .card.weekday .card-day { color: #d8d0f0; }
+    .card.sat     .card-day { color: #60a8e0; }
+    .card.sun     .card-day, .card.holiday .card-day { color: #e06070; }
+    .card.today   .card-day { color: #4a9ef5 !important; }
     @keyframes dot-blink {
       0%,100% { opacity: 1; transform: scale(1); }
       50%      { opacity: 0.3; transform: scale(0.6); }
     }
     .today-dot {
       width: 8px; height: 8px;
-      background: #3c9ef5;
+      background: #4a9ef5;
       border-radius: 50%;
-      box-shadow: 0 0 5px 2px rgba(60,158,245,0.5);
+      box-shadow: 0 0 6px 2px rgba(74,158,245,0.6);
       animation: dot-blink 1.5s ease-in-out infinite;
     }
     .card-body {
@@ -89,25 +88,47 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 10px 16px 8px 14px;
-      gap: 4px;
+      padding: 10px 14px 8px 14px;
+      gap: 3px;
     }
-    .status-main { font-size: 1.25rem; font-weight: 900; color: #2e2040; line-height: 1.2; }
-    .time-sub { font-size: 0.9rem; font-weight: 600; color: #8070a8; letter-spacing: 0.01em; margin-top: 2px; }
+    .status-main { font-size: 1.2rem; font-weight: 900; color: #e8e0ff; line-height: 1.2; }
+    .time-sub { font-size: 0.88rem; font-weight: 600; color: #9080c0; letter-spacing: 0.01em; margin-top: 1px; }
     .home-row { display: flex; align-items: center; gap: 8px; }
-    .home-icon  { font-size: 1.7rem; line-height: 1; }
-    .home-label { font-size: 1.25rem; font-weight: 900; color: #2e2040; }
-    .card-fact { font-size: 0.58rem; color: #9080b0; line-height: 1.4; margin-top: 3px; }
+    .home-icon  { font-size: 1.6rem; line-height: 1; }
+    .home-label { font-size: 1.2rem; font-weight: 900; color: #e8e0ff; }
     .area-tag {
       display: inline-block;
-      font-size: 0.68rem; font-weight: 700; color: #5538a8;
-      background: rgba(100,80,200,0.1);
-      border: 1.5px solid rgba(100,80,200,0.25);
+      font-size: 0.65rem; font-weight: 700; color: #a090e0;
+      background: rgba(120,100,220,0.2);
+      border: 1.5px solid rgba(120,100,220,0.35);
       border-radius: 20px;
       padding: 1px 8px;
       vertical-align: middle;
       margin-left: 4px;
     }
+
+    /* クイズ */
+    .quiz {
+      margin-top: 4px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .quiz-q {
+      font-size: 0.58rem;
+      color: #7868a8;
+      line-height: 1.4;
+      transition: opacity 0.2s;
+    }
+    .quiz-a {
+      font-size: 0.58rem;
+      color: #a0d8a0;
+      line-height: 1.4;
+      display: none;
+    }
+    .quiz.open .quiz-q { display: none; }
+    .quiz.open .quiz-a { display: block; }
+
     .week-toggle {
       display: flex;
       justify-content: center;
@@ -119,24 +140,24 @@
       font-weight: 700;
       padding: 3px 14px;
       border-radius: 20px;
-      border: 2px solid #c0b0e0;
+      border: 2px solid #3a3060;
       background: transparent;
-      color: #a090c0;
+      color: #6858a0;
       cursor: pointer;
       letter-spacing: 0.05em;
       transition: all 0.2s;
     }
     .week-btn.active {
-      background: #c0b0e0;
-      color: #fff;
-      border-color: #c0b0e0;
+      background: #3a3060;
+      color: #c0b8e8;
+      border-color: #3a3060;
     }
     #loading {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #a090c0;
+      color: #6858a0;
       font-size: 0.9rem;
       font-weight: 600;
     }
@@ -145,7 +166,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #c04040;
+      color: #e06070;
       font-size: 0.8rem;
       text-align: center;
       padding: 20px;
@@ -163,36 +184,43 @@
 <div id="error-msg" style="display:none"></div>
 
 <script>
-// ▼ GASデプロイ後にURLをここに貼り付けてください
 const GAS_URL = "https://script.google.com/macros/s/AKfycbytjrZgr0GddGKk0bfdJK09sIqL8ex_1C4MyN0zefdmz8qHF31uL2qduwHlDbi5uTA/exec";
 
-const FACTS = [
-  "📖 タコは3つの心臓を持っている。全部同時に動いているぞ🐙",
-  "💬 ネコが箱に入りたがるのは囲まれた空間が安心できるから。野生の本能が今もダンボールの中で生きている📦",
-  "📖 シロクマの毛は透明で中が空洞だ。光が乱反射して白く見えるだけで皮膚は真っ黒🐻‍❄️",
-  "💬 ラッコは眠るとき昆布に体を巻きつけて流されないようにする。自然のアンカーを使った賢い寝方🦦",
-  "📖 キリンの1日の睡眠時間は約30分。外敵を警戒しながら少しずつ眠る命がけの短眠生活🦒",
-  "💬 タコの血は青色だ。銅を含むヘモシアニンが酸素を運ぶため青くなる不思議な体の仕組み🐙",
-  "📖 フラミンゴがピンク色なのはエビや藻の色素のせい。白いエサだけ食べると白くなってしまう🦩",
-  "💬 クモは筋肉でなく血圧を使って足を動かす。油圧式ロボットのような仕組みで8本の足を器用に操る🕷️",
-  "📖 イルカは眠るとき脳の半分だけを休め、残り半分で泳ぎ続ける。片目を開けたまま眠るマルチタスクの達人🐬",
-  "💬 アリクイは歯が一本もない。長さ60cmの舌で1日3万5千匹ものアリを食べる食の達人🐜",
-  "📖 カタツムリの目は4つある。大きな触角に眼があり、小さい触角で匂いを感じる🐌",
-  "💬 シマウマの縞模様は一頭一頭ぜんぶ違う。人間の指紋と同じように個体識別できるオリジナルのデザイン🦓",
-  "📖 ネコはどんな高さから落ちても必ず足から着地できる。空中で体をひねる「ライティング反射」のおかげ🐱",
-  "💬 カバは汗の代わりに赤い液体を分泌する。日焼け止めと抗菌剤を兼ねた天然のスキンケア液🦛",
-  "📖 ミツバチが一生かけて集めるハチミツはティースプーン1杯分。一生を捧げた量がそれだけ🍯",
-  "💬 ネコが「にゃー」と鳴くのは人間に向けてだけ。野良猫同士ではほとんど鳴かない🐈",
-  "📖 ゾウは唯一ジャンプできない動物といわれている。4本の足が同時に地面を離れることがない🐘",
-  "💬 タコは色盲なのにカモフラージュが得意。皮膚で光を感じて色を合わせているといわれている🐙",
-  "📖 サメは骨がない。全身が軟骨でできているため、化石になりにくく歯だけが残ることが多い🦈",
-  "💬 カラスは道具を使って食べ物を取ることができる。信号待ちのクルマにクルミを轢かせる知恵者もいる🐦‍⬛",
+const QUIZZES = [
+  { q:"🐙 タコの心臓はいくつ？", a:"3つ！しかも全部同時に動いている" },
+  { q:"🐻‍❄️ シロクマの毛は実は何色？", a:"透明！皮膚が黒くて、光の乱反射で白く見えるだけ" },
+  { q:"🦒 キリンが1日に眠る時間はどのくらい？", a:"約30分！外敵を警戒しながら少しずつ眠っている" },
+  { q:"🦩 フラミンゴが白くなるのはなぜ？", a:"白いエサだけ食べると白くなる。ピンクはエビや藻の色素のせい" },
+  { q:"🐬 イルカが眠るとき脳はどうなる？", a:"脳の半分だけ休んで残り半分で泳ぎ続ける。片目も開いたまま" },
+  { q:"🦦 ラッコが眠るとき流されないようにどうする？", a:"昆布に体を巻きつける。自然のアンカーを使った賢い寝方" },
+  { q:"🐘 ゾウにできない動きは？", a:"ジャンプ！4本の足が同時に地面を離れることがない" },
+  { q:"🦈 サメの体の中に骨はある？", a:"ない！全身が軟骨。だから化石になりにくく歯だけが残る" },
+  { q:"🐌 カタツムリの目はいくつ？", a:"4つ！大きな触角に眼、小さい触角で匂いを感じている" },
+  { q:"🐦‍⬛ カラスがクルミを割るために使う道具は？", a:"車！信号待ちのクルマにクルミを轢かせる知恵者がいる" },
+  { q:"🍯 ミツバチが一生で集めるハチミツの量は？", a:"ティースプーン1杯分だけ。一生を捧げてその量" },
+  { q:"🌙 月まで歩いていったら何年かかる？", a:"約9年！時速5kmで歩き続けた場合" },
+  { q:"🌍 地球の中心の温度は？", a:"約6000℃。太陽の表面とほぼ同じ温度" },
+  { q:"🧠 人間の脳の重さはどのくらい？", a:"約1.4kg。豆腐2丁分くらい" },
+  { q:"💤 人生の何割を眠って過ごす？", a:"約3分の1。80歳生きると約27年は寝ている計算" },
+  { q:"👃 鼻で感じられるニオイは何種類？", a:"約1兆種類！目で見える色は数百万色程度なのに" },
+  { q:"🍎 りんごは何科の植物？", a:"バラ科！イチゴも桃も梅もバラ科の仲間" },
+  { q:"⚡ 雷1回のエネルギーで電球を何時間点けられる？", a:"約20分分。意外と少ない" },
+  { q:"🗾 日本には島がいくつある？", a:"約14000島！そのうち人が住んでいるのは約430島" },
+  { q:"🐟 金魚の記憶は3秒？", a:"ウソ！実は数ヶ月は覚えている。頭のいい魚" },
+  { q:"🌈 虹は何色？", a:"7色は日本の見方。国によって5色や6色のところも" },
+  { q:"🧊 氷は水より軽い？重い？", a:"軽い！だから氷は水に浮く。これがないと地球の海は凍っていた" },
+  { q:"🐝 ハチの羽ばたき速度は？", a:"1秒間に約200回！だからあの「ブーン」という音が鳴る" },
+  { q:"🍜 ラーメンの「ラー」ってどういう意味？", a:"中国語で「引っ張る」の意味。麺を引き伸ばして作るから" },
+  { q:"📱 スマホの画面を1日何回タッチしている？", a:"平均約2600回。ヘビーユーザーは5000回以上" },
+  { q:"🌿 酸素を一番多く作っているのは？", a:"森ではなく海！海のプランクトンが地球の酸素の半分以上を作る" },
+  { q:"🐧 ペンギンは空を飛べない。じゃあ泳ぐ速さは？", a:"最速40km/h！新幹線の3分の1くらいのスピード" },
+  { q:"🎵 音と光どちらが速い？", a:"光！光は秒速30万km、音は秒速約340m。約90万倍の差" },
 ];
 
-function getFact(dateStr) {
+function getQuiz(dateStr) {
   const d = new Date(dateStr);
-  const idx = (d.getFullYear() * 366 + d.getMonth() * 31 + d.getDate()) % FACTS.length;
-  return FACTS[idx];
+  const idx = (d.getFullYear() * 366 + d.getMonth() * 31 + d.getDate()) % QUIZZES.length;
+  return QUIZZES[idx];
 }
 
 let scheduleData = null;
@@ -209,6 +237,10 @@ const pad = n => String(n).padStart(2, "0");
 function todayStr() {
   const d = new Date();
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+
+function toggleQuiz(el) {
+  el.classList.toggle('open');
 }
 
 function renderCards(data) {
@@ -255,7 +287,7 @@ function renderCards(data) {
     }
 
     const todayDotHTML = isToday ? `<div class="today-dot"></div>` : "";
-    const factHTML = getFact(e.date);
+    const quiz = getQuiz(e.date);
 
     wrap.innerHTML += `
       <div class="card ${typeClass} ${dowClass}${isToday ? " today" : ""}${isPast ? " past" : ""}">
@@ -266,7 +298,10 @@ function renderCards(data) {
         </div>
         <div class="card-body">
           ${mainHTML}
-          <div class="card-fact">${factHTML}</div>
+          <div class="quiz" onclick="toggleQuiz(this)">
+            <div class="quiz-q">❓ ${quiz.q}</div>
+            <div class="quiz-a">💡 ${quiz.a}</div>
+          </div>
         </div>
       </div>`;
   });
@@ -297,7 +332,6 @@ function loadSchedule() {
 }
 
 loadSchedule();
-// 30分ごとに自動更新
 setInterval(loadSchedule, 30 * 60 * 1000);
 </script>
 </body>

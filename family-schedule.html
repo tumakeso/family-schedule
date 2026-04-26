@@ -109,24 +109,36 @@
 
     /* クイズ */
     .quiz {
-      margin-top: 4px;
+      margin-top: 5px;
       cursor: pointer;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(160,140,220,0.2);
+      border-radius: 10px;
+      padding: 5px 9px 4px;
+      transition: background 0.15s;
     }
+    .quiz:active { background: rgba(255,255,255,0.09); }
     .quiz-q {
-      font-size: 0.58rem;
-      color: #7868a8;
+      font-size: 0.7rem;
+      color: #9080c8;
       line-height: 1.4;
-      transition: opacity 0.2s;
+    }
+    .quiz-hint {
+      font-size: 0.52rem;
+      color: #5a4a80;
+      margin-top: 2px;
+      letter-spacing: 0.03em;
     }
     .quiz-a {
-      font-size: 0.58rem;
-      color: #a0d8a0;
+      font-size: 0.7rem;
+      color: #90d890;
       line-height: 1.4;
       display: none;
     }
     .quiz.open .quiz-q { display: none; }
+    .quiz.open .quiz-hint { display: none; }
     .quiz.open .quiz-a { display: block; }
 
     .week-toggle {
